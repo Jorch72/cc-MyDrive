@@ -2,13 +2,17 @@ package mydrive.common;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import mydrive.MyDrive;
+import mydrive.common.handler.PlayerPresenceHandler;
 import mydrive.common.item.MyDiskItem;
 
 public class CommonProxy {
 
 	public void preInit() {
+		FMLCommonHandler.instance().bus().register(PlayerPresenceHandler.instance);
 		registerItems();
 	}
 	
@@ -18,7 +22,7 @@ public class CommonProxy {
 	
 	private void registerItems() {
 		MyDrive.Items.diskItem = new MyDiskItem();
-		GameRegistry.registerItem(MyDrive.Items.diskItem, "myDiskItem");
+		GameRegistry.registerItem(MyDrive.Items.diskItem, "myDiskItem", "mydrive");
 	}
 
 	private void registerRecipes() {
