@@ -1,10 +1,12 @@
-package mydrive.common.network;
+package mydrive.common.network.handler;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import mydrive.MyDrive;
+import mydrive.common.network.packet.PacketDirectoryStructure;
+import mydrive.common.network.packet.PacketDirectoryStructureRequest;
 import mydrive.common.util.FileSystemUtils;
 import mydrive.common.util.MDLog;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;

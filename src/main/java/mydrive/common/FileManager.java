@@ -13,12 +13,12 @@ import mydrive.MyDrive;
 import mydrive.common.handler.FileFetchingQueue;
 import mydrive.common.handler.IncomingFileHandler;
 import mydrive.common.handler.OutgoingFileHandler;
-import mydrive.common.network.PacketDirectoryComparison;
-import mydrive.common.network.PacketFileContents;
-import mydrive.common.network.PacketFileContinue;
-import mydrive.common.network.PacketFileHeader;
-import mydrive.common.network.PacketFileRequest;
 import mydrive.common.network.PacketHandler;
+import mydrive.common.network.packet.PacketDirectoryComparison;
+import mydrive.common.network.packet.PacketFileContents;
+import mydrive.common.network.packet.PacketFileContinue;
+import mydrive.common.network.packet.PacketFileHeader;
+import mydrive.common.network.packet.PacketFileRequest;
 import mydrive.common.util.FileSystemUtils;
 import mydrive.common.util.MDLog;
 

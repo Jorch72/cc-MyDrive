@@ -11,9 +11,9 @@ import java.util.HashMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import mydrive.MyDrive;
-import mydrive.common.network.PacketFileContents;
-import mydrive.common.network.PacketFileHeader;
 import mydrive.common.network.PacketHandler;
+import mydrive.common.network.packet.PacketFileContents;
+import mydrive.common.network.packet.PacketFileHeader;
 import mydrive.common.util.FileSystemUtils;
 import mydrive.common.util.MDLog;
 

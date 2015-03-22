@@ -1,8 +1,10 @@
-package mydrive.common.network;
+package mydrive.common.network.handler;
 
 import java.io.File;
 
 import mydrive.MyDrive;
+import mydrive.common.network.packet.PacketComparisonResponse;
+import mydrive.common.network.packet.PacketDirectoryComparison;
 import mydrive.common.util.FileSystemUtils;
 import mydrive.common.util.MDLog;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;

@@ -1,4 +1,4 @@
-package mydrive.common.network;
+package mydrive.common.network.packet;
 
 import io.netty.buffer.ByteBuf;
 

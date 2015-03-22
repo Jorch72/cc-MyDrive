@@ -1,4 +1,4 @@
-package mydrive.common.network;
+package mydrive.common.network.handler;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,8 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import mydrive.common.network.packet.PacketComparisonResponse;
+import mydrive.common.network.packet.PacketFileComparison;
 import mydrive.common.util.FileSystemUtils;
 import mydrive.common.util.MDLog;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;

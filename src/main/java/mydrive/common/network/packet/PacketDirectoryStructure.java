@@ -1,8 +1,10 @@
-package mydrive.common.network;
+package mydrive.common.network.packet;
 
 import io.netty.buffer.ByteBuf;
 
 import java.io.UnsupportedEncodingException;
+
+import mydrive.common.network.PacketGeneric;
 
 public class PacketDirectoryStructure extends PacketGeneric {
 	public String[] paths;

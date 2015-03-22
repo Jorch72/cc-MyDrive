@@ -1,6 +1,7 @@
-package mydrive.common.network;
+package mydrive.common.network.handler;
 
 import mydrive.common.FileManager;
+import mydrive.common.network.packet.PacketFileContinue;
 import mydrive.common.util.MDLog;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;

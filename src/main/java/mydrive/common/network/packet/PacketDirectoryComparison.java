@@ -1,14 +1,20 @@
-package mydrive.common.network;
-
-import java.io.UnsupportedEncodingException;
+package mydrive.common.network.packet;
 
 import io.netty.buffer.ByteBuf;
 
-public class PacketFileComparison extends PacketFilePath {
+import java.io.UnsupportedEncodingException;
+
+import mydrive.common.network.PacketGeneric;
+
+public class PacketDirectoryComparison extends PacketGeneric {
 	public String md5Digest;
 	
-	public PacketFileComparison() {
+	public PacketDirectoryComparison() {
 		
+	}
+	
+	public PacketDirectoryComparison(String digest) {
+		this.md5Digest = digest;
 	}
 	
 	@Override
