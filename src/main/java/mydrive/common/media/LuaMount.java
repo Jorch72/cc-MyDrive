@@ -20,19 +20,19 @@ public class LuaMount implements IMount {
 	
 	@Override
     public boolean exists(String path) throws IOException {
-            File file = new File(new File(MyDrive.SERVER_DRIVES_PATH, name), path);
+            File file = new File(new File(MyDrive.proxy.getDrivePath(), name), path);
             return file.exists();
     }
 
     @Override
     public boolean isDirectory(String path) throws IOException {
-            File file = new File(new File(MyDrive.SERVER_DRIVES_PATH, name), path);
+            File file = new File(new File(MyDrive.proxy.getDrivePath(), name), path);
             return file.isDirectory();
     }
 
     @Override
     public void list(String path, List<String> contents) throws IOException {
-            File directory = new File(new File(MyDrive.SERVER_DRIVES_PATH, name), path);
+            File directory = new File(new File(MyDrive.proxy.getDrivePath(), name), path);
             for (File file : directory.listFiles()) {
                     contents.add(file.getName());
             }
@@ -40,13 +40,13 @@ public class LuaMount implements IMount {
 
     @Override
     public long getSize(String path) throws IOException {
-            File file = new File(new File(MyDrive.SERVER_DRIVES_PATH, name), path);
+            File file = new File(new File(MyDrive.proxy.getDrivePath(), name), path);
             return file.length();
     }
 
     @Override
     public InputStream openForRead(String path) throws IOException {
-            File file = new File(new File(MyDrive.SERVER_DRIVES_PATH, name), path);
+            File file = new File(new File(MyDrive.proxy.getDrivePath(), name), path);
             return new FileInputStream(file);
     }
 	

@@ -1,13 +1,17 @@
 package mydrive.common;
 
+import java.io.File;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import mydrive.MyDrive;
 import mydrive.common.handler.PlayerPresenceHandler;
 import mydrive.common.item.MyDiskItem;
+import mydrive.common.network.PacketHandler;
 
 public class CommonProxy {
 
@@ -18,6 +22,8 @@ public class CommonProxy {
 	
 	public void init() {
 		registerRecipes();
+		PacketHandler.init();
+		FileManager.instance.init();
 	}
 	
 	private void registerItems() {
@@ -35,5 +41,13 @@ public class CommonProxy {
 				" p ",
 				" d ",
 		        'p', paper, 'd', diamond, 'r', redstone);
+	}
+	
+	public File getFolder() {
+		return MinecraftServer.getServer().getFile("");
+	}
+	
+	public String getDrivePath() {
+		return "mods/mydrive/cache";
 	}
 }

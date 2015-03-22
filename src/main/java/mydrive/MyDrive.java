@@ -21,10 +21,8 @@ public class MyDrive {
 	
 	public static class Config {
 		public static boolean writeableMounts;
+		public static int chunkSize = 4096;
 	}
-	
-	public static String SERVER_DRIVES_PATH;
-	public static String CLIENT_FILES_PATH;
 	
 	@Instance(value = "MyDrive")
 	public static MyDrive instance;
@@ -34,10 +32,9 @@ public class MyDrive {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt) {
+		long time = System.nanoTime();
 		MDLog.init();
-		
-		SERVER_DRIVES_PATH = "mods/mydrive/cache";
-		CLIENT_FILES_PATH = "mods/mydrive/files";
+		MDLog.debug("Starting pre-init");
 		
 		Configuration configFile = new Configuration(evt.getSuggestedConfigurationFile());
 
@@ -48,10 +45,17 @@ public class MyDrive {
 		configFile.save();
 		
 		proxy.preInit();
+		
+		MDLog.debug("Finished pre-init in %d ms", (System.nanoTime() - time) / 1000000);
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent evt) {
+		long time = System.nanoTime();
+		MDLog.debug("Starting init");
+		
 		proxy.init();
+		
+		MDLog.debug("Finished init in %d ms", (System.nanoTime() - time) / 1000000);
 	}
 }
