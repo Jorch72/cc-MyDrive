@@ -19,19 +19,17 @@ public class HandlerDirectoryStructureRequest implements IMessageHandler<PacketD
 		MDLog.debug("Received Directory Structure Request packet");
 		File directory = new File(MyDrive.proxy.getFolder(), MyDrive.proxy.getDrivePath());
 		ArrayList<File> files = FileSystemUtils.getDirectoryContents(directory);
-		Iterator<File> iter = files.iterator();
-		while (iter.hasNext()) {
-			File f = iter.next();
-			
-			if (f.isDirectory()) {
-				iter.remove();
-			}
-		}
+		
 		String[] paths = new String[files.size()];
 		String[] digests = new String[files.size()];
 		for (int i = 0; i < files.size(); i++) {
-			paths[i] = directory.toPath().relativize(files.get(i).toPath()).toString();
-			digests[i] = FileSystemUtils.getFileDigest(files.get(i));
+			File f = files.get(i);
+			paths[i] = directory.toPath().relativize(f.toPath()).toString();
+			if (f.isDirectory()) {
+				digests[i] = "dir";
+			} else {
+				digests[i] = FileSystemUtils.getFileDigest(f);
+			}
 		}
 		return new PacketDirectoryStructure(paths, digests);
 	}

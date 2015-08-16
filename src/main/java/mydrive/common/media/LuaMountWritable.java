@@ -20,26 +20,26 @@ public class LuaMountWritable extends LuaMount implements IWritableMount {
 
 	@Override
 	public void makeDirectory(String path) throws IOException {
-		File file = new File(new File(MyDrive.proxy.getDrivePath(), this.name), path);
+		File file = new File(this.directory, path);
         file.mkdir();
 	}
 
 	@Override
 	public void delete(String path) throws IOException {
-		File file = new File(new File(MyDrive.proxy.getDrivePath(), this.name), path);
+		File file = new File(this.directory, path);
         file.delete();
 		
 	}
 
 	@Override
 	public OutputStream openForWrite(String path) throws IOException {
-		File file = new File(new File(MyDrive.proxy.getDrivePath(), name), path);
+		File file = new File(this.directory, path);
         return new FileOutputStream(file);
 	}
 
 	@Override
 	public OutputStream openForAppend(String path) throws IOException {
-		File file = new File(new File(MyDrive.proxy.getDrivePath(), name), path);
+		File file = new File(this.directory, path);
         return Files.newOutputStream(file.toPath(), StandardOpenOption.APPEND);
 	}
 

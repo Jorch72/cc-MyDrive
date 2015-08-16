@@ -32,7 +32,7 @@ public class MyDiskItem extends Item implements IMedia {
 	
 	@Override
 	public void registerIcons(IIconRegister register) {
-		register.registerIcon("mydrive:mydisk");
+		this.itemIcon = register.registerIcon("mydrive:mydisk");
 	}
 	
 	@Override

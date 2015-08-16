@@ -20,8 +20,9 @@ public class MyDrive {
 	}
 	
 	public static class Config {
-		public static boolean writeableMounts;
+		public static boolean writeableMounts = false;
 		public static int chunkSize = 4096;
+		public static long mountSize;
 	}
 	
 	@Instance(value = "MyDrive")
@@ -34,28 +35,28 @@ public class MyDrive {
 	public void preInit(FMLPreInitializationEvent evt) {
 		long time = System.nanoTime();
 		MDLog.init();
-		MDLog.debug("Starting pre-init");
+		MDLog.info("Starting pre-init");
 		
 		Configuration configFile = new Configuration(evt.getSuggestedConfigurationFile());
 
-		Property prop = configFile.get("general", "writeableMounts", false);
-		prop.comment = "Server-side player mounts are writeable";
-		Config.writeableMounts = prop.getBoolean(false);
+		Property prop = configFile.get("general", "mountSizeLimit", 1048576);
+		prop.comment = "Size limit for player folders";
+		Config.mountSize = (long) prop.getInt(1048576);
 
 		configFile.save();
-		
+
 		proxy.preInit();
-		
-		MDLog.debug("Finished pre-init in %d ms", (System.nanoTime() - time) / 1000000);
+
+		MDLog.info("Finished pre-init in %d ms", (System.nanoTime() - time) / 1000000);
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent evt) {
 		long time = System.nanoTime();
-		MDLog.debug("Starting init");
+		MDLog.info("Starting init");
 		
 		proxy.init();
 		
-		MDLog.debug("Finished init in %d ms", (System.nanoTime() - time) / 1000000);
+		MDLog.info("Finished init in %d ms", (System.nanoTime() - time) / 1000000);
 	}
 }

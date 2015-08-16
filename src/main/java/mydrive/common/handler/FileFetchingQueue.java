@@ -9,6 +9,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import mydrive.MyDrive;
+
+import org.apache.commons.io.FileUtils;
+
 public class FileFetchingQueue {
 	
 	ArrayList<File> files = new ArrayList<File>();
@@ -20,8 +24,12 @@ public class FileFetchingQueue {
 	}
 	
 	public String getNextPath() {
-		if (!this.files.isEmpty()) {
+		if (!this.files.isEmpty() && FileUtils.sizeOfDirectory(this.directory.toFile()) <= MyDrive.Config.mountSize) {
 			Path p = this.files.remove(0).toPath();
+			File parent = p.getParent().toFile();
+			if (!parent.exists()) {
+				parent.mkdirs();
+			}
 			return this.directory.relativize(p).toString();
 		}
 		return null;

@@ -18,6 +18,7 @@ public class HandlerDirectoryComparison implements IMessageHandler<PacketDirecto
 		MDLog.debug("Received Directory Comparison Packet");
 		File playerFolder = new File(MyDrive.proxy.getFolder(), MyDrive.proxy.getDrivePath());
 		String digest = FileSystemUtils.calcMD5HashForDir(playerFolder);
+		MDLog.debug("Server: %s Client: %s", message.md5Digest, digest);
 		return new PacketComparisonResponse(playerFolder.getPath(), digest.equals(message.md5Digest));
 	}
 

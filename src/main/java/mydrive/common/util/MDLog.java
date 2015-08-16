@@ -29,6 +29,6 @@ public class MDLog {
 	}
 
 	public static void debug(String format, Object... data) {
-		log(Level.INFO, format, data);
+		log(Level.DEBUG, format, data);
 	}
 }

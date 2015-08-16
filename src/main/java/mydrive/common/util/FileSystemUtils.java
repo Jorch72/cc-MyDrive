@@ -18,6 +18,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
+import mydrive.MyDrive;
+
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class FileSystemUtils {
@@ -38,19 +40,19 @@ public class FileSystemUtils {
 	}
 	
 	public static String calcMD5HashForDir(File dirToHash) {
-		MDLog.debug("Starting directory hashing in %s", dirToHash.getAbsolutePath());
-
+		
 	    assert (dirToHash.isDirectory());
 	    ArrayList<File> files = getFilesInDirectory(dirToHash);
 	    String fileInformation = "";
-	    
+
 	    for (File f : files) {
+	    	
 	    	fileInformation += dirToHash.toPath().relativize(f.toPath()).toString();
 	    	if (f.isFile()) {
 	    		fileInformation += getFileDigest(f);
 	    	}
 	    }
-	    
+
 	    return DigestUtils.md5Hex(fileInformation);
 
 	}
@@ -81,17 +83,22 @@ public class FileSystemUtils {
 	
 	public static String getFileDigest(File f) {
 		String digest = null;
-		try {
-			InputStream stream = new FileInputStream(f);
-			digest = DigestUtils.md5Hex(stream);
-			stream.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		byte[] allData = null;
+		if (f.exists()) {
+			if (f.isDirectory()) {
+				digest = "dir";
+			} else {
+				try {
+					allData = Files.readAllBytes(f.toPath());
+					digest = DigestUtils.md5Hex(allData);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			digest = "null";
 		}
+
 		return digest;
 	}
 }

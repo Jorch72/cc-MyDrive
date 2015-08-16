@@ -9,6 +9,7 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import mydrive.MyDrive;
 import mydrive.common.network.packet.PacketComparisonResponse;
 import mydrive.common.network.packet.PacketFileComparison;
 import mydrive.common.util.FileSystemUtils;
@@ -21,8 +22,10 @@ public class HandlerFileComparison implements IMessageHandler<PacketFileComparis
 	
 	@Override
 	public PacketComparisonResponse onMessage(PacketFileComparison message, MessageContext ctx) {
-		MDLog.debug("Received File Comparison packet");
-		return new PacketComparisonResponse(message.filePath, message.md5Digest.equals(FileSystemUtils.getFileDigest(new File(message.filePath))));
+		MDLog.debug("Received File Comparison packet: %s", message.filePath);
+		String digest = FileSystemUtils.getFileDigest(new File(new File(MyDrive.proxy.getFolder(), MyDrive.proxy.getDrivePath()), message.filePath));
+		MDLog.debug("Server: %s Client: %s", message.md5Digest, digest);
+		return new PacketComparisonResponse(message.filePath, message.md5Digest.equals(digest));
 	}
 
 }

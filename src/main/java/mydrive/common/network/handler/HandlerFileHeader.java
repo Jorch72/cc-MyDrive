@@ -17,7 +17,7 @@ public class HandlerFileHeader implements IMessageHandler<PacketFileHeader, Pack
 		MDLog.debug("Received File Header packet");
 		String path = new File(ctx.getServerHandler().playerEntity.getUniqueID().toString(), message.filePath).toString();
 		MDLog.debug("Final path: %s", path);
-		return FileManager.instance.onStartReceivingFile(path, message.request, message.chunkCount);
+		return FileManager.instance.onStartReceivingFile(path, message.request, message.chunkCount, message.isDirectory);
 	}
 
 }

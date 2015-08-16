@@ -11,7 +11,7 @@ public class HandlerFileContinue implements IMessageHandler<PacketFileContinue, 
 
 	@Override
 	public IMessage onMessage(PacketFileContinue message, MessageContext ctx) {
-		MDLog.debug("Received File Continue packet");
+		MDLog.debug("Received File Continue packet for request %d", message.request);
 		return FileManager.instance.getNextFileContentsPacket(message.request);
 	}
 

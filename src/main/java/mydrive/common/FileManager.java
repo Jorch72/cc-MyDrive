@@ -5,6 +5,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.commons.io.FileUtils;
+
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,6 +18,7 @@ import mydrive.common.handler.IncomingFileHandler;
 import mydrive.common.handler.OutgoingFileHandler;
 import mydrive.common.network.PacketHandler;
 import mydrive.common.network.packet.PacketDirectoryComparison;
+import mydrive.common.network.packet.PacketFileComparison;
 import mydrive.common.network.packet.PacketFileContents;
 import mydrive.common.network.packet.PacketFileContinue;
 import mydrive.common.network.packet.PacketFileHeader;
@@ -33,9 +37,6 @@ public class FileManager {
 	public static final FileManager instance = new FileManager();
 	
 	public void init() {
-		MDLog.debug("Initializing FileManager");
-		MDLog.debug("Folder path is %s", MyDrive.proxy.getFolder());
-		MDLog.debug("Drive path is %s", MyDrive.proxy.getDrivePath());
 	}
 	
 	public void onPlayerJoin(EntityPlayer player) {
@@ -45,21 +46,29 @@ public class FileManager {
 			playerFolder.mkdirs();
 		}
 		String digest = FileSystemUtils.calcMD5HashForDir(playerFolder);
-		MDLog.debug("Sending Directory Comparison with digest %s", digest);
 		PacketDirectoryComparison packet = new PacketDirectoryComparison(digest);
 		PacketHandler.INSTANCE.sendTo(packet, (EntityPlayerMP) player);
 	}
 	
-	public PacketFileRequest onStartReceivingFile(String path, int request, int chunks) {
+	public PacketFileRequest onStartReceivingFile(String path, int request, int chunks, boolean isDirectory) {
 		if (chunks > 0) {
+			File dir = new File(new File(MyDrive.proxy.getFolder(), MyDrive.proxy.getDrivePath()), new File(path).toPath().subpath(0,1).toString());
+			if (chunks * MyDrive.Config.chunkSize + FileUtils.sizeOfDirectory(dir) >= MyDrive.Config.mountSize) {
+				return null;
+			}
 			IncomingFileHandler handler = new IncomingFileHandler(path, chunks);
 			incomingHandlers.put(request, handler);
 			return new PacketFileContinue(path, request);
 		} else {
-			//file was no good for whatever reason
-			PacketFileRequest packet = nextFile(requestQueues.get(request));
-			requestQueues.remove(request);
-			return packet;
+			if (isDirectory) {
+				new File(new File(MyDrive.proxy.getFolder(), MyDrive.proxy.getDrivePath()), path).mkdirs();
+				return null;
+			} else {
+				//file was no good for whatever reason
+				PacketFileRequest packet = nextFile(requestQueues.get(request));
+				requestQueues.remove(request);
+				return packet;
+			}
 		}
 	}
 	
@@ -93,19 +102,25 @@ public class FileManager {
 		return handler.getHeader();
 	}
 	
+	public IMessage queueFile(File directory, String filePath) {
+		ArrayList<File> files = new ArrayList<File>();
+		files.add(new File(directory, filePath));
+		FileFetchingQueue queue = new FileFetchingQueue(directory.toPath(), files);
+		return nextFile(queue);
+	}
+	
 	public PacketFileRequest onDirectoryContentsMismatch(String playerID, File directory, String[] paths, String[] digests) {
 		//remove old files that should no longer exist
 		String[] current = FileSystemUtils.getRelativeFilePathsForDirectoryContents(directory);
 		for (int i = 0; i < current.length; i++) {
 			boolean fileExists = false;
 			for (int j = 0; j < paths.length; j++) {
-				if (current[i] == paths[j]) {
+				if (current[i].equals(paths[j])) {
 					fileExists = true;
 				}
 			}
 			if (!fileExists) {
-				File f = new File(directory, paths[i]);
-				MDLog.debug("Removing old file %s", f.getAbsolutePath());
+				File f = new File(directory, current[i]);
 				f.delete();
 			}
 		}
@@ -113,9 +128,14 @@ public class FileManager {
 		ArrayList<File> files = new ArrayList<File>();
 		for (int i = 0; i < paths.length; i++) {
 			File f = new File(directory, paths[i]);
-			if (!f.exists() || FileSystemUtils.getFileDigest(f) != digests[i]) {
-				MDLog.debug("Adding new file for download: %s", f.getAbsolutePath());
-				files.add(f);
+			if (!f.exists() || !FileSystemUtils.getFileDigest(f).equals(digests[i])) {
+				if(digests[i].equals("dir")) {
+					if (!f.exists()) {
+						f.mkdirs();
+					}
+				} else {
+					files.add(f);
+				}
 			}
 		}
 		FileFetchingQueue queue = new FileFetchingQueue(directory.toPath(), files);
@@ -133,5 +153,14 @@ public class FileManager {
 			//done fetching files!
 			return null;
 		}
+	}
+
+	public IMessage onFileChanged(String filePath, File directory, int type) {
+		if(type == 1) {
+			FileUtils.deleteQuietly(new File(directory, filePath));
+		} else if (type == 2) {
+			return new PacketFileComparison(filePath, FileSystemUtils.getFileDigest(new File(directory, filePath)));
+		}
+		return null;
 	}
 }

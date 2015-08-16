@@ -11,6 +11,11 @@ public class PacketFileComparison extends PacketFilePath {
 		
 	}
 	
+	public PacketFileComparison(String path, String digest) {
+		this.filePath = path;
+		this.md5Digest = digest;
+	}
+	
 	@Override
 	public void toBytes(ByteBuf buf) {
 		super.toBytes(buf);

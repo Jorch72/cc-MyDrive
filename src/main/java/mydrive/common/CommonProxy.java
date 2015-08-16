@@ -12,6 +12,7 @@ import mydrive.MyDrive;
 import mydrive.common.handler.PlayerPresenceHandler;
 import mydrive.common.item.MyDiskItem;
 import mydrive.common.network.PacketHandler;
+import mydrive.common.util.MDLog;
 
 public class CommonProxy {
 
@@ -24,6 +25,11 @@ public class CommonProxy {
 		registerRecipes();
 		PacketHandler.init();
 		FileManager.instance.init();
+		initFileWatcher();
+	}
+	
+	public void initFileWatcher() {
+		
 	}
 	
 	private void registerItems() {
