@@ -1,5 +1,7 @@
 package mydrive;
 
+import java.io.File;
+
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import mydrive.common.CommonProxy;
@@ -12,7 +14,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod( modid = "MyDrive", name = "MyDrive", version = "0.0.1", dependencies = "required-after:ComputerCraft")
+@Mod( modid = "MyDrive", name = "MyDrive", version = "0.0.2", dependencies = "required-after:ComputerCraft")
 public class MyDrive {
 
 	public static class Items {
@@ -54,6 +56,8 @@ public class MyDrive {
 	public void init(FMLInitializationEvent evt) {
 		long time = System.nanoTime();
 		MDLog.info("Starting init");
+		
+		new File(proxy.getFolder(), proxy.getDrivePath()).mkdirs();
 		
 		proxy.init();
 		
